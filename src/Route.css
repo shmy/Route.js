@@ -1,0 +1,351 @@
+/**
+*   默认动画为enter
+*   .page的父元素请设置景深 perspective: 1000px; 
+*   .page的父元素最好设置一个背景颜色，避免切换时闪烁
+*/
+
+
+/*遮盖层*/
+
+.mask,
+.page {
+    /*禁止触摸高亮*/
+    -webkit-tap-highlight-color：color
+    /*禁止长按默认事件*/
+    -webkit-touch-callout: none;
+    /*禁止选择文字*/
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.mask {
+    margin: 0;
+    padding: 0;
+    background-color: rgba(204, 204, 204, .5);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: none;
+}
+
+
+/*遮盖层Loading*/
+
+.mask::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    margin-top: -1.3rem;
+    margin-left: -1.3rem;
+    display: block;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 100%;
+    border: .3rem solid orange;
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+    /*动画配置*/
+    -webkit-animation: loading 750ms linear infinite;
+    -moz-animation: loading 750ms linear infinite;
+    -o-animation: loading 750ms linear infinite;
+    -ms-animation: loading 750ms linear infinite;
+    animation: loading 750ms linear infinite;
+}
+
+
+/*遮盖层文字*/
+
+.mask::after {
+    content: '拼命加载中...';
+    display: block;
+    text-align: center;
+    height: 6rem;
+    width: 10rem;
+    position: absolute;
+    line-height: 9rem;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    margin-top: -2rem;
+    margin-left: -5rem;
+    background-color: #666;
+    color: #fff;
+    border-radius: .3rem;
+}
+
+
+/* ↓Loading动画-Start*/
+
+@-webkit-keyframes loading {
+    0% {
+        -webkit-transform: rotateZ(0deg) scale(1);
+    }
+    50% {
+        -webkit-transform: rotateZ(180deg) scale(0.7);
+    }
+    100% {
+        -webkit-transform: rotateZ(360deg) scale(1);
+    }
+}
+
+@-o-keyframes loading {
+    0% {
+        -o-transform: rotateZ(0deg) scale(1);
+    }
+    50% {
+        -o-transform: rotateZ(180deg) scale(0.7);
+    }
+    100% {
+        -o-transform: rotateZ(360deg) scale(1);
+    }
+}
+
+@-moz-keyframes loading {
+    0% {
+        -moz-transform: rotateZ(0deg) scale(1);
+    }
+    50% {
+        -moz-transform: rotateZ(180deg) scale(0.7);
+    }
+    100% {
+        -moz-transform: rotateZ(360deg) scale(1);
+    }
+}
+
+@-ms-keyframes loading {
+    0% {
+        -ms-transform: rotateZ(0deg) scale(1);
+    }
+    50% {
+        -ms-transform: rotateZ(180deg) scale(0.7);
+    }
+    100% {
+        -ms-transform: rotateZ(360deg) scale(1);
+    }
+}
+
+@keyframes loading {
+    0% {
+        transform: rotateZ(0deg) scale(1);
+    }
+    50% {
+        transform: rotateZ(180deg) scale(0.7);
+    }
+    100% {
+        transform: rotateZ(360deg) scale(1);
+    }
+}
+
+
+/* ↑Loading动画-End*/
+
+
+/*通用页面样式*/
+
+.page {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #eeeeee;
+    /*让页面隐藏*/
+    -webkit-transform: translateY(-100%);
+    -moz-transform: translateY(-100%);
+    -o-transform: translateY(-100%);
+    -ms-transform: translateY(-100%);
+    transform: translateY(-100%);
+    /*动画配置*/
+    -webkit-animation-duration: 355ms;
+    -moz-animation-duration: 355ms;
+    -o-animation-duration: 355ms;
+    -ms-animation-duration: 355ms;
+    animation-duration: 355ms;
+    -webkit-animation-timing-function: ease;
+    -moz-animation-timing-function: ease;
+    -o-animation-timing-function: ease;
+    -ms-animation-timing-function: ease;
+    animation-timing-function: ease;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-fill-mode: forwards;
+    -o-animation-fill-mode: forwards;
+    -ms-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+
+.page::-webkit-scrollbar {
+    width: .7rem;
+    height: .7rem;
+    background-color: transparent;
+}
+
+
+/*定义滚动条轨道 内阴影+圆角*/
+
+.page::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 .5rem rgba(0, 0, 0, 0.3);
+    border-radius: .5rem;
+    background-color: #F5F5F5;
+}
+
+
+/*定义滑块 内阴影+圆角*/
+
+.page::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    -webkit-box-shadow: inset 0 0 .5rem rgba(0, 0, 0, 0.5);
+    background-color: #ddd;
+}
+
+
+/*enter进入动画*/
+
+.in-enter {
+    -webkit-animation-name: in-enter;
+    -moz-animation-name: in-enter;
+    -o-animation-name: in-enter;
+    -ms-animation-name: in-enter;
+    animation-name: in-enter;
+    z-index: 2;
+}
+
+
+/*enter退出动画*/
+
+.out-enter {
+    -webkit-animation-name: out-enter;
+    -moz-animation-name: out-enter;
+    -o-animation-name: out-enter;
+    -ms-animation-name: out-enter;
+    animation-name: out-enter;
+}
+
+
+/* enter-in动画-Start*/
+
+@-webkit-keyframes in-enter {
+    from {
+        -webkit-transform: translateZ(-1000px);
+    }
+    to {
+        -webkit-transform: translateZ(0);
+    }
+}
+
+@-moz-keyframes in-enter {
+    from {
+        -moz-transform: translateZ(-1000px);
+    }
+    to {
+        -moz-transform: translateZ(0);
+    }
+}
+
+@-o-keyframes in-enter {
+    from {
+        -o-transform: translateZ(-1000px);
+    }
+    to {
+        -o-transform: translateZ(0);
+    }
+}
+
+@-ms-keyframes in-enter {
+    from {
+        -ms-transform: translateZ(-1000px);
+    }
+    to {
+        -ms-transform: translateZ(0);
+    }
+}
+
+@keyframes in-enter {
+    from {
+        transform: translateZ(-1000px);
+    }
+    to {
+        transform: translateZ(0);
+    }
+}
+
+
+/* enter-in动画-End*/
+
+
+/* enter-out动画-Start*/
+
+@-webkit-keyframes out-enter {
+    0% {
+        -webkit-transform: translateZ(0);
+    }
+    99% {
+        -webkit-transform: translateZ(-1000px) translateY(-100%);
+    }
+    100% {
+        -webkit-transform: translateY(-100%);
+    }
+}
+
+@-o-keyframes out-enter {
+    0% {
+        -o-transform: translateZ(0);
+    }
+    99% {
+        -o-transform: translateZ(-1000px) translateY(-100%);
+    }
+    100% {
+        -o-transform: translateY(-100%);
+    }
+}
+
+@-moz-keyframes out-enter {
+    0% {
+        -moz-transform: translateZ(0);
+    }
+    99% {
+        -moz-transform: translateZ(-1000px) translateY(-100%);
+    }
+    100% {
+        -moz-transform: translateY(-100%);
+    }
+}
+
+@-ms-keyframes out-enter {
+    0% {
+        -ms-transform: translateZ(0);
+    }
+    99% {
+        -ms-transform: translateZ(-1000px) translateY(-100%);
+    }
+    100% {
+        -ms-transform: translateY(-100%);
+    }
+}
+
+@keyframes out-enter {
+    0% {
+        transform: translateZ(0);
+    }
+    99% {
+        transform: translateZ(-1000px) translateY(-100%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+
+/* enter-out动画-End*/

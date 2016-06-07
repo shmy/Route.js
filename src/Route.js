@@ -8,6 +8,7 @@
 'use strict';
 // 路由对象
 (function(global) {
+
     function Route(object) {
         // 要填充的父元素
         this.parent = object && object.parent || document.body;
@@ -17,6 +18,8 @@
         this.timeout = object && object.timeout || 15000;
         // 默认的主页
         this.default = object && object.default || 'default';
+        // 是否执行获取到的js脚本片段
+        this.eval = true;
         // 遮盖层元素
         this.mask = null;
         // 是否缓存 非全局设定
@@ -25,7 +28,7 @@
         this.pages = {};
         // 之前页的DMO对象
         this.oldPage = null;
-        // 执行绑定
+        // 绑定需要的事件
         this.bind();
         // 初始化
         this.init();
@@ -142,9 +145,12 @@
      */
     Route.prototype.render = function(data, url) {
         this.setOldPage();
+        // 创建div
         var page = document.createElement('div');
+        // 设置样式
         page.classList.add('page');
         page.classList.add('in-' + this.animation);
+        // 加入内容
         page.innerHTML = data;
         // 如果要缓存
         if (url) {
@@ -154,6 +160,26 @@
         // 把当前页设置为上一个页面
         this.oldPage = page;
         this.parent.appendChild(page);
+        // 执行js脚本
+        if (this.eval) {
+            // 如果存在</script>标签 
+            // 应该自定义为其他的自定义标签 比较稳妥
+            // 或者使用高级正则匹配
+            // 现在的方式必须把script标签写在html片段之前 有局限性
+            // 脚本内容最好写在闭包里面，避免污染全局变量
+            if (data.indexOf('</script>') !== -1) {
+                // 通过</script>标签拆分成数组
+                var datas = data.split('</script>');
+                // 替换<script>标签
+                var script = datas[0].replace(/(<script>)|(<script type="javascript">)|(<script type='javascript'>)/, '');
+                try {
+                    // 执行这个脚本
+                    eval(script);
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
     };
     /**
      *  调用缓存渲染
@@ -179,6 +205,10 @@
             // 添加上一个页面out样式
             this.oldPage.classList.add('out-' + this.animation);
             // 绑定动画结束事件
+            this.oldPage.addEventListener('webkitAnimationend', animationEnd, false);
+            this.oldPage.addEventListener('mozAnimationend', animationEnd, false);
+            this.oldPage.addEventListener('oAnimationend', animationEnd, false);
+            this.oldPage.addEventListener('msAnimationend', animationEnd, false);
             this.oldPage.addEventListener('animationend', animationEnd, false);
             // Out动画结束后
             function animationEnd() {
@@ -193,12 +223,20 @@
                         });
                     } finally {
                         // 解绑本事件
-                        this.removeEventListener('animationend', animationEnd, false);
+                        removeEvent(this);
                         return;
                     }
                 }
                 // 解绑本事件
-                this.removeEventListener('animationend', animationEnd, false);
+                removeEvent(this);
+            }
+            // 解绑事件
+            function removeEvent(page) {
+                page.removeEventListener('webkitAnimationend', animationEnd, false);
+                page.removeEventListener('mozAnimationend', animationEnd, false);
+                page.removeEventListener('oAnimationend', animationEnd, false);
+                page.removeEventListener('msAnimationend', animationEnd, false);
+                page.removeEventListener('animationend', animationEnd, false);
             }
         }
     };

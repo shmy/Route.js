@@ -14,8 +14,11 @@
     /*禁止长按默认事件*/
     -webkit-touch-callout: none;
     /*禁止选择文字*/
-    user-select: none;
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .mask {
